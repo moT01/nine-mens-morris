@@ -227,10 +227,17 @@ function evaluateBoard(state, computerColor) {
   score -= getMills(board, opp).length * 200;
   score += state.piecesOnBoard[computerColor] * 10;
   score -= state.piecesOnBoard[opp] * 10;
-  score += getAlmostMills(board, computerColor) * 5;
-  score -= getAlmostMills(board, opp) * 5;
+  score += getAlmostMills(board, computerColor) * 18;
+  score -= getAlmostMills(board, opp) * 18;
   score += getMobility(state, computerColor);
   score -= getMobility(state, opp);
+
+  for (let i = 0; i < 24; i++) {
+    if (!STRATEGIC_NODES.has(i)) continue;
+    if (board[i] === computerColor) score += 4;
+    else if (board[i] === opp) score -= 4;
+  }
+
   return score;
 }
 
@@ -408,7 +415,6 @@ let animLastPlaced = null;   // node index of last placed piece
 let animLastRemoved = null;  // node index of last removed piece
 let animLastFrom = null;     // source node of last slide
 let animLastTo = null;       // destination node of last slide
-let animNewMillNodes = null; // Set of node indices in newly formed mills
 let lastComputerTo = null;   // destination of last computer move
 
 function getTheme() {
@@ -578,10 +584,7 @@ function renderSVGBoard(state) {
       const protectedClass = isProtected ? ' piece-protected' : '';
       pieceCircle = `<circle cx="${cx}" cy="${cy}" r="13" class="piece ${colorClass}${millClass}${protectedClass}" />`;
       if (isSelected) selectedRing = `<circle cx="${cx}" cy="${cy}" r="17" class="piece-selected-ring piece-selected-ring--${piece === 'black' ? 'blue' : 'gold'}" />`;
-      if (isRemovable) selectedRing = `<circle cx="${cx}" cy="${cy}" r="22" class="piece-removable-ring" />`;
-      if (i === lastComputerTo) {
-        lastMoveDot = `<circle cx="${cx}" cy="${cy}" r="4" class="last-move-dot" />`;
-      }
+      if (isRemovable) selectedRing = `<circle cx="${cx}" cy="${cy}" r="17" class="piece-removable-ring" />`;
     } else {
       pieceCircle = `<circle cx="${cx}" cy="${cy}" r="11" class="node-dot" />`;
     }
@@ -592,7 +595,7 @@ function renderSVGBoard(state) {
         const dotClass = currentPlayer === 'black' ? 'valid-dot valid-dot-blue' : 'valid-dot valid-dot-gold';
         validDot = `<circle cx="${cx}" cy="${cy}" r="6" class="${dotClass}" />`;
       } else if (state.phase === 'flying') {
-        validDot = `<circle cx="${cx}" cy="${cy}" r="19" class="node-ring-target" />`;
+        validDot = `<circle cx="${cx}" cy="${cy}" r="17" class="node-ring-target" />`;
       }
     }
 
@@ -653,20 +656,18 @@ function getStatusText(state) {
 }
 
 function renderPiecesInHand(state) {
-  if (state.phase !== 'placement') return '';
-  const bCount = state.piecesToPlace.black;
-  const wCount = state.piecesToPlace.white;
+  const total = 9;
+  const bLeft = state.piecesToPlace.black;
+  const wLeft = state.piecesToPlace.white;
+  const bDots = Array(total).fill(0).map((_, i) =>
+    `<span class="hand-dot ${i < bLeft ? 'blue' : 'played'}"></span>`
+  ).join('');
+  const wDots = Array(total).fill(0).map((_, i) =>
+    `<span class="hand-dot ${i < wLeft ? 'gold' : 'played'}"></span>`
+  ).join('');
   return `<div class="pieces-in-hand" aria-label="Pieces remaining to place">
-    <div class="hand-row">
-      <span class="hand-label" aria-label="Blue pieces remaining: ${bCount}">Blue</span>
-      <div class="hand-dots">${Array(bCount).fill('<span class="hand-dot blue"></span>').join('')}</div>
-      <span class="hand-count mono">${bCount}</span>
-    </div>
-    <div class="hand-row">
-      <span class="hand-label" aria-label="Gold pieces remaining: ${wCount}">Gold</span>
-      <div class="hand-dots">${Array(wCount).fill('<span class="hand-dot gold"></span>').join('')}</div>
-      <span class="hand-count mono">${wCount}</span>
-    </div>
+    <div class="hand-row"><div class="hand-dots">${bDots}</div></div>
+    <div class="hand-row"><div class="hand-dots">${wDots}</div></div>
   </div>`;
 }
 
@@ -989,19 +990,8 @@ function doAiMove() {
   }
 
   // placement
-  const boardBefore = [...gameState.board];
-  const playerBefore = gameState.currentPlayer;
-  const millsBefore = getMills(boardBefore, playerBefore).map(m => m.join(','));
-
   applyAction(gameState, action);
-
   animLastPlaced = action.node;
-  const millsAfter = getMills(gameState.board, playerBefore).map(m => m.join(','));
-  const newMills = millsAfter.filter(m => !millsBefore.includes(m));
-  if (newMills.length > 0) {
-    animNewMillNodes = new Set(newMills.flatMap(m => m.split(',').map(Number)));
-  }
-
   finalizeAfterAction();
 }
 
@@ -1023,18 +1013,7 @@ function animateMoveThenApply(fromNode, toNode) {
   animLastFrom = fromNode;
   animLastTo = toNode;
 
-  const boardBefore = [...gameState.board];
-  const playerBefore = gameState.currentPlayer;
-  const millsBefore = getMills(boardBefore, playerBefore).map(m => m.join(','));
-
   applyMove(gameState, fromNode, toNode);
-
-  const millsAfter = getMills(gameState.board, playerBefore).map(m => m.join(','));
-  const newMills = millsAfter.filter(m => !millsBefore.includes(m));
-  if (newMills.length > 0) {
-    animNewMillNodes = new Set(newMills.flatMap(m => m.split(',').map(Number)));
-  }
-
   finalizeAfterAction();
 }
 
@@ -1070,7 +1049,7 @@ function finalizeAfterAction() {
   animLastRemoved = null;
   animLastFrom = null;
   animLastTo = null;
-  animNewMillNodes = null;
+
 
   if (!gameState.gameOver && isComputerTurn(gameState)) {
     scheduleAiIfNeeded();
@@ -1103,16 +1082,6 @@ function applyPostRenderAnimations() {
     }
   }
 
-  // Mill flash: pulse newly formed mill pieces
-  if (animNewMillNodes) {
-    animNewMillNodes.forEach(nodeIndex => {
-      const el = document.querySelector(`.board-node[data-node="${nodeIndex}"] .piece`);
-      if (el) {
-        el.classList.add('piece-mill-flash');
-        el.addEventListener('animationend', () => el.classList.remove('piece-mill-flash'), { once: true });
-      }
-    });
-  }
 }
 
 function updateStatusBar() {
@@ -1164,9 +1133,7 @@ function onNodeClick(nodeIndex) {
   }
 
   // Placement or selection change
-  const boardBefore = [...gameState.board];
   const playerBefore = gameState.currentPlayer;
-  const millsBefore = getMills(boardBefore, playerBefore).map(m => m.join(','));
 
   handleClick(gameState, nodeIndex);
 
@@ -1176,14 +1143,8 @@ function onNodeClick(nodeIndex) {
     return;
   }
 
-  // Track placement animation
   if (phase === 'placement' && gameState.board[nodeIndex] === playerBefore) {
     animLastPlaced = nodeIndex;
-    const millsAfter = getMills(gameState.board, playerBefore).map(m => m.join(','));
-    const newMills = millsAfter.filter(m => !millsBefore.includes(m));
-    if (newMills.length > 0) {
-      animNewMillNodes = new Set(newMills.flatMap(m => m.split(',').map(Number)));
-    }
   }
 
   finalizeAfterAction();

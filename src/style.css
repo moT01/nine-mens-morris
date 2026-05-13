@@ -369,14 +369,6 @@ body {
   gap: var(--space-2);
 }
 
-.hand-label {
-  font-size: var(--text-md);
-  color: var(--color-text-muted);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  width: 36px;
-  flex-shrink: 0;
-}
 
 .hand-dots {
   display: flex;
@@ -400,13 +392,10 @@ body {
   background: var(--piece-gold);
 }
 
-.hand-count {
-  font-family: var(--font-mono);
-  font-size: var(--text-md);
-  color: var(--color-text-muted);
-  width: 20px;
-  text-align: right;
+.hand-dot.played {
+  background: var(--color-border);
 }
+
 
 /* ── Board ── */
 
@@ -444,7 +433,7 @@ body {
   stroke: var(--color-danger);
   stroke-width: 2;
   stroke-dasharray: 6 4;
-  animation: dash-spin 1s linear infinite;
+  animation: dash-spin 3s linear infinite;
 }
 
 .node-ring-target {
@@ -453,7 +442,7 @@ body {
   stroke-width: 2;
   stroke-dasharray: 6 4;
   opacity: 0.7;
-  animation: dash-spin 1s linear infinite;
+  animation: dash-spin 3s linear infinite;
 }
 
 .valid-dot {
@@ -524,16 +513,6 @@ body {
   to { transform: scale(0); opacity: 0; }
 }
 
-@keyframes mill-flash {
-  0%   { filter: brightness(1); }
-  30%  { filter: brightness(2); }
-  60%  { filter: brightness(1.4); }
-  100% { filter: brightness(1); }
-}
-
-.piece-mill-flash {
-  animation: mill-flash 500ms ease forwards;
-}
 
 @keyframes dash-spin {
   to { stroke-dashoffset: -40; }
