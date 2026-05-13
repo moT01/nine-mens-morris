@@ -409,6 +409,7 @@ let animLastRemoved = null;  // node index of last removed piece
 let animLastFrom = null;     // source node of last slide
 let animLastTo = null;       // destination node of last slide
 let animNewMillNodes = null; // Set of node indices in newly formed mills
+let lastComputerTo = null;   // destination of last computer move
 
 function getTheme() {
   return localStorage.getItem('nmm_theme') || 'dark';
@@ -561,36 +562,48 @@ function renderSVGBoard(state) {
     const piece = board[i];
     const isSelected = i === selectedNode;
     const isTarget = validTargets.has(i);
-    const isRemovable = mustRemove && board[i] === opp;
+    const isRemovable = mustRemove && board[i] === opp && validTargets.has(i);
+    const isProtected = mustRemove && board[i] === opp && !validTargets.has(i);
     const inMill = millNodes.has(i) && piece !== null;
     const label = piece
       ? `Position ${i + 1}, ${piece === currentPlayer ? 'your piece' : "opponent's piece"}`
       : `Position ${i + 1}, empty`;
 
     let pieceCircle = '';
+    let selectedRing = '';
+    let lastMoveDot = '';
     if (piece) {
       const colorClass = piece === 'black' ? 'piece-blue' : 'piece-gold';
       const millClass = inMill ? ' piece-in-mill' : '';
-      const selectedClass = isSelected ? ' piece-selected' : '';
-      pieceCircle = `<circle cx="${cx}" cy="${cy}" r="14" class="piece ${colorClass}${millClass}${selectedClass}" />`;
+      const protectedClass = isProtected ? ' piece-protected' : '';
+      pieceCircle = `<circle cx="${cx}" cy="${cy}" r="13" class="piece ${colorClass}${millClass}${protectedClass}" />`;
+      if (isSelected) selectedRing = `<circle cx="${cx}" cy="${cy}" r="17" class="piece-selected-ring piece-selected-ring--${piece === 'black' ? 'blue' : 'gold'}" />`;
+      if (isRemovable) selectedRing = `<circle cx="${cx}" cy="${cy}" r="22" class="piece-removable-ring" />`;
+      if (i === lastComputerTo) {
+        lastMoveDot = `<circle cx="${cx}" cy="${cy}" r="4" class="last-move-dot" />`;
+      }
     } else {
-      pieceCircle = `<circle cx="${cx}" cy="${cy}" r="9" class="node-dot" />`;
+      pieceCircle = `<circle cx="${cx}" cy="${cy}" r="11" class="node-dot" />`;
     }
 
-    let targetRing = '';
-    if (isTarget && !isRemovable && state.phase === 'flying') {
-      targetRing = `<circle cx="${cx}" cy="${cy}" r="19" class="target-ring" />`;
-    }
-    if (isRemovable) {
-      targetRing = `<circle cx="${cx}" cy="${cy}" r="19" class="removable-ring" />`;
+    let validDot = '';
+    if (!piece && isTarget) {
+      if (state.phase === 'movement') {
+        const dotClass = currentPlayer === 'black' ? 'valid-dot valid-dot-blue' : 'valid-dot valid-dot-gold';
+        validDot = `<circle cx="${cx}" cy="${cy}" r="6" class="${dotClass}" />`;
+      } else if (state.phase === 'flying') {
+        validDot = `<circle cx="${cx}" cy="${cy}" r="19" class="node-ring-target" />`;
+      }
     }
 
     const tabindex = (isTarget || isSelected || (piece === currentPlayer && !mustRemove && state.phase !== 'placement')) ? '0' : '-1';
 
     return `<g class="board-node" data-node="${i}" role="button" tabindex="${tabindex}" aria-label="${label}">
-      ${targetRing}
+      ${selectedRing}
       ${pieceCircle}
-      <circle cx="${cx}" cy="${cy}" r="20" class="node-hit" />
+      ${validDot}
+      ${lastMoveDot}
+      <circle cx="${cx}" cy="${cy}" r="24" class="node-hit" />
     </g>`;
   }).join('');
 
@@ -604,14 +617,6 @@ function renderSVGBoard(state) {
         <stop offset="0%" stop-color="var(--piece-gold)" />
         <stop offset="100%" stop-color="var(--piece-gold)" />
       </radialGradient>
-      <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="4" result="blur" />
-        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-      </filter>
-      <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="4" result="blur" />
-        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-      </filter>
     </defs>
     ${linesSVG}
     ${nodesSVG}
@@ -636,13 +641,15 @@ function getStatusText(state) {
   const cp = state.currentPlayer;
   const cpName = state.mode === 'pvc'
     ? (cp === state.playerColor ? 'Your' : "Computer's")
-    : (cp === 'black' ? "Blue's" : "Gold's");
-  const phaseLabel = state.phase === 'placement' ? 'Placement' : state.phase === 'flying' ? 'Flying' : 'Movement';
+    : (cp === 'black' ? "Player 1's" : "Player 2's");
 
   if (state.mustRemove) {
-    return { text: `${cpName} turn - remove an opponent piece`, cls: 'status-neutral' };
+    return { text: `${cpName} turn: Remove an opponent piece`, cls: 'status-neutral' };
   }
-  return { text: `${cpName} turn - ${phaseLabel}`, cls: 'status-neutral' };
+  if (state.phase === 'placement') {
+    return { text: `${cpName} turn: Place a piece`, cls: 'status-neutral' };
+  }
+  return { text: `${cpName} turn: Move a piece`, cls: 'status-neutral' };
 }
 
 function renderPiecesInHand(state) {
@@ -976,6 +983,7 @@ function doAiMove() {
   }
 
   if (action.type === 'move') {
+    lastComputerTo = action.to;
     animateMoveThenApply(action.from, action.to);
     return;
   }

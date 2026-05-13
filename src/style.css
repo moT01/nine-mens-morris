@@ -431,6 +431,55 @@ body {
   fill: var(--color-border);
 }
 
+.piece-selected-ring {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.piece-selected-ring--blue { stroke: var(--piece-blue); }
+.piece-selected-ring--gold { stroke: var(--piece-gold); }
+
+.piece-removable-ring {
+  fill: none;
+  stroke: var(--color-danger);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+  animation: dash-spin 1s linear infinite;
+}
+
+.node-ring-target {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+  opacity: 0.7;
+  animation: dash-spin 1s linear infinite;
+}
+
+.valid-dot {
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: valid-dot-pulse 1.4s ease-in-out infinite;
+}
+
+.valid-dot-blue { fill: var(--piece-blue); }
+.valid-dot-gold { fill: var(--piece-gold); }
+
+@keyframes valid-dot-pulse {
+  0%, 100% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+}
+
+.last-move-dot {
+  fill: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.piece-protected {
+  opacity: 0.35;
+}
+
 .node-hit {
   fill: transparent;
   cursor: pointer;
@@ -452,14 +501,9 @@ body {
 /* Pieces */
 
 .piece {
-  r: 14px;
-  transition: r 120ms ease;
+  r: 13px;
   transform-box: fill-box;
   transform-origin: center;
-}
-
-.board-node:hover .piece {
-  r: 17px;
 }
 
 .piece-blue {
@@ -491,49 +535,8 @@ body {
   animation: mill-flash 500ms ease forwards;
 }
 
-.piece.piece-selected {
-  filter: drop-shadow(0 0 6px var(--color-accent)) drop-shadow(0 0 12px var(--color-accent));
-}
-
-.piece-blue.piece-in-mill {
-  filter: url(#glow-blue) drop-shadow(0 0 5px var(--piece-blue));
-}
-
-.piece-gold.piece-in-mill {
-  filter: url(#glow-gold) drop-shadow(0 0 5px var(--piece-gold));
-}
-
-/* hover: grow radius via JS not possible for SVG attr, use filter instead */
-.board-node:hover .piece {
-  filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
-}
-
-.board-node:hover .piece.piece-selected {
-  filter: drop-shadow(0 0 8px var(--color-accent)) drop-shadow(0 0 14px var(--color-accent));
-}
-
-/* Valid target ring */
-
 @keyframes dash-spin {
   to { stroke-dashoffset: -40; }
-}
-
-.target-ring {
-  fill: none;
-  stroke: var(--color-accent);
-  stroke-width: 2;
-  stroke-dasharray: 6 4;
-  opacity: 0.7;
-  animation: dash-spin 1s linear infinite;
-}
-
-.removable-ring {
-  fill: none;
-  stroke: var(--color-danger);
-  stroke-width: 2;
-  stroke-dasharray: 6 4;
-  opacity: 0.8;
-  animation: dash-spin 1s linear infinite;
 }
 
 /* ── Game over overlay ── */
