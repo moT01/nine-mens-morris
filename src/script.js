@@ -233,7 +233,7 @@ function evaluateBoard(state, computerColor) {
   const board = state.board;
 
   const isPlacement = state.phase === 'placement';
-  const ownAlmostWeight = isPlacement ? 6 : 22;
+  const ownAlmostWeight = isPlacement ? 1 : 22;
   const oppAlmostWeight = isPlacement ? 20 : 22;
 
   let score = 0;
@@ -241,8 +241,11 @@ function evaluateBoard(state, computerColor) {
   score -= getMills(board, opp).length * 200;
   score += state.piecesOnBoard[computerColor] * 10;
   score -= state.piecesOnBoard[opp] * 10;
-  score += getAlmostMills(board, computerColor) * ownAlmostWeight;
-  score -= getAlmostMills(board, opp) * oppAlmostWeight;
+  const ownAlmost = getAlmostMills(board, computerColor);
+  const oppAlmost = getAlmostMills(board, opp);
+  score += ownAlmost * ownAlmostWeight;
+  score -= oppAlmost * oppAlmostWeight;
+  if (isPlacement && oppAlmost >= 2) score -= 150;
   score += getMobility(state, computerColor);
   score -= getMobility(state, opp);
 
@@ -355,17 +358,24 @@ const NODE_VALUE = new Map([
   [9, 12], [11, 12], [12, 12], [14, 12],
   [1, 8],  [3, 8],  [4, 8],  [6, 8],
   [17, 8], [19, 8], [20, 8], [22, 8],
-  [0, -2], [2, -2], [5, -2], [7, -2],
-  [8, -2], [10, -2],[13, -2],[15, -2],
-  [16, -2],[18, -2],[21, -2],[23, -2],
+  [0, 0], [2, 0], [5, 0], [7, 0],
+  [8, 0], [10, 0],[13, 0],[15, 0],
+  [16, 0],[18, 0],[21, 0],[23, 0],
 ]);
 
 function getBestMove(state) {
   const computerColor = opponent(state.playerColor);
   const opp = opponent(computerColor);
-  const depth = state.phase === 'placement' ? 3 : 4;
+  const depth = state.phase === 'placement' ? 5 : state.phase === 'flying' ? 3 : 4;
   const moves = getValidMoves(state);
   if (moves.length === 0) return null;
+
+  // First move: pick randomly from top junction nodes
+  if (state.piecesToPlace[computerColor] === 9) {
+    const junctions = [9, 11, 12, 14].filter(n => state.board[n] === null);
+    const node = junctions[Math.floor(Math.random() * junctions.length)];
+    return { type: 'place', node };
+  }
 
   // Greedy: form own mill immediately
   const millsBefore = getMills(state.board, computerColor).length;
@@ -388,21 +398,29 @@ function getBestMove(state) {
     }
   }
 
+  // Greedy: block opponent fork (placement only)
+  if (state.phase === 'placement') {
+    for (const move of moves) {
+      const simBoard = [...state.board];
+      simBoard[move.node] = opp;
+      if (getAlmostMills(simBoard, opp) >= 2) return move;
+    }
+  }
+
   let bestScore = -Infinity;
-  let bestMove = moves[0];
+  const candidates = [];
 
   for (const move of orderMoves(state, moves, computerColor)) {
     const next = cloneState(state);
     applyAction(next, move);
-    let score = minimax(next, depth - 1, -Infinity, Infinity, next.currentPlayer === computerColor, computerColor);
+    const score = minimax(next, depth - 1, -Infinity, Infinity, next.currentPlayer === computerColor, computerColor);
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestMove = move;
-    }
+    if (score > bestScore) bestScore = score;
+    candidates.push({ move, score });
   }
 
-  return bestMove;
+  const top = candidates.filter(c => c.score === bestScore);
+  return top[Math.floor(Math.random() * top.length)].move;
 }
 
 function getBestRemoval(state) {
@@ -716,11 +734,14 @@ function renderPiecesInHand(state) {
   const total = 9;
   const bLeft = state.piecesToPlace.black;
   const wLeft = state.piecesToPlace.white;
+  const bothDone = bLeft === 0 && wLeft === 0;
+  const bActive = !bothDone ? bLeft : state.piecesOnBoard.black;
+  const wActive = !bothDone ? wLeft : state.piecesOnBoard.white;
   const bDots = Array(total).fill(0).map((_, i) =>
-    `<span class="hand-dot ${i < bLeft ? 'blue' : 'played'}"></span>`
+    `<span class="hand-dot ${i < bActive ? 'blue' : 'played'}"></span>`
   ).join('');
   const wDots = Array(total).fill(0).map((_, i) =>
-    `<span class="hand-dot ${i < wLeft ? 'gold' : 'played'}"></span>`
+    `<span class="hand-dot ${i < wActive ? 'gold' : 'played'}"></span>`
   ).join('');
   return `<div class="pieces-in-hand" aria-label="Pieces remaining to place">
     <div class="hand-row"><div class="hand-dots">${bDots}</div></div>
