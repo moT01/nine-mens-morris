@@ -556,7 +556,7 @@ function renderHeader(showClose = false, centerContent = '') {
     <div class="header-left">
       ${showClose ? `<button class="icon-btn" id="btn-close" aria-label="Close game">${ICONS.x}</button>` : '<div class="icon-btn-placeholder"></div>'}
     </div>
-    ${centerContent ? `<div class="header-center">${centerContent}</div>` : ''}
+    <div class="header-center">${centerContent}</div>
     <div class="header-right">
       <button class="icon-btn" id="btn-help" aria-label="Help">${ICONS.question}</button>
       <button class="icon-btn" id="btn-theme" aria-label="${themeLabel}" aria-pressed="${theme === 'light'}">${ICONS[themeIcon]}</button>

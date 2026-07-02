@@ -53,10 +53,14 @@ body {
 /* ── Header ── */
 
 .game-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: var(--space-3) var(--space-4);
+}
+
+.header-right {
+  justify-self: end;
 }
 
 .header-left,
