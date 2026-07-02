@@ -459,6 +459,18 @@ const NODE_POS = [
   [200,280],[240,280],[280,280],
 ];
 
+const NODE_NAMES = [
+  'Outer ring top left', 'Outer ring top center', 'Outer ring top right',
+  'Outer ring left middle', 'Outer ring right middle',
+  'Outer ring bottom left', 'Outer ring bottom center', 'Outer ring bottom right',
+  'Middle ring top left', 'Middle ring top center', 'Middle ring top right',
+  'Middle ring left middle', 'Middle ring right middle',
+  'Middle ring bottom left', 'Middle ring bottom center', 'Middle ring bottom right',
+  'Inner ring top left', 'Inner ring top center', 'Inner ring top right',
+  'Inner ring left middle', 'Inner ring right middle',
+  'Inner ring bottom left', 'Inner ring bottom center', 'Inner ring bottom right',
+];
+
 // Board lines (pairs of node indices forming lines)
 const LINES = [
   // outer square
@@ -484,6 +496,8 @@ let thinkingTimeout = null;
 let isThinking = false;
 let isAnimating = false;
 let shakeTimeout = null;
+let boardFocus = 0;
+let keyboardMode = false;
 
 // Animation tracking
 let animLastPlaced = null;   // node index of last placed piece
@@ -491,6 +505,20 @@ let animLastRemoved = null;  // node index of last removed piece
 let animLastFrom = null;     // source node of last slide
 let animLastTo = null;       // destination node of last slide
 let lastComputerTo = null;   // destination of last computer move
+
+function getAdjacentInDirection(nodeIndex, key) {
+  const [cx, cy] = NODE_POS[nodeIndex];
+  for (const adj of ADJACENCY[nodeIndex]) {
+    const [ax, ay] = NODE_POS[adj];
+    const dx = ax - cx;
+    const dy = ay - cy;
+    if (key === 'ArrowRight' && dx > 0 && dy === 0) return adj;
+    if (key === 'ArrowLeft'  && dx < 0 && dy === 0) return adj;
+    if (key === 'ArrowDown'  && dy > 0 && dx === 0) return adj;
+    if (key === 'ArrowUp'    && dy < 0 && dx === 0) return adj;
+  }
+  return null;
+}
 
 function getTheme() {
   return localStorage.getItem('nmm_theme') || 'dark';
@@ -646,9 +674,12 @@ function renderSVGBoard(state) {
     const isRemovable = mustRemove && board[i] === opp && validTargets.has(i);
     const isProtected = mustRemove && board[i] === opp && !validTargets.has(i);
     const inMill = millNodes.has(i) && piece !== null;
-    const label = piece
-      ? `Position ${i + 1}, ${piece === currentPlayer ? 'your piece' : "opponent's piece"}`
-      : `Position ${i + 1}, empty`;
+    const pieceLabel = piece
+      ? (state.mode === 'pvp'
+          ? (piece === 'black' ? "Player 1's piece" : "Player 2's piece")
+          : (piece === currentPlayer ? 'your piece' : "opponent's piece"))
+      : 'empty';
+    const label = `${NODE_NAMES[i]}, ${pieceLabel}`;
 
     let pieceCircle = '';
     let selectedRing = '';
@@ -674,7 +705,7 @@ function renderSVGBoard(state) {
       }
     }
 
-    const tabindex = (isTarget || isSelected || (piece === currentPlayer && !mustRemove && state.phase !== 'placement')) ? '0' : '-1';
+    const tabindex = i === boardFocus ? '0' : '-1';
 
     return `<g class="board-node" data-node="${i}" role="button" tabindex="${tabindex}" aria-label="${label}">
       ${selectedRing}
@@ -975,6 +1006,7 @@ function bindHomeEvents() {
     savePrefs(mode, playerColor);
     gameState = initGame(mode, playerColor);
     clearSavedGame();
+    boardFocus = 0;
     currentScreen = 'play';
     render();
     scheduleAiIfNeeded();
@@ -1022,6 +1054,7 @@ function bindPlayEvents() {
       const { mode, playerColor } = gameState;
       gameState = initGame(mode, playerColor);
       clearSavedGame();
+      boardFocus = 0;
       render();
       scheduleAiIfNeeded();
     });
@@ -1039,14 +1072,36 @@ function bindPlayEvents() {
 
   // Board node clicks
   document.querySelectorAll('.board-node').forEach(el => {
-    el.addEventListener('click', () => onNodeClick(parseInt(el.dataset.node)));
+    el.addEventListener('focus', () => {
+      boardFocus = parseInt(el.dataset.node);
+    });
+    el.addEventListener('click', () => {
+      keyboardMode = false;
+      onNodeClick(parseInt(el.dataset.node));
+    });
     el.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
+        keyboardMode = true;
         onNodeClick(parseInt(el.dataset.node));
       }
     });
   });
+
+  // Arrow key navigation on the board
+  const boardSvg = document.querySelector('.board-svg');
+  if (boardSvg) {
+    boardSvg.addEventListener('keydown', (e) => {
+      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+      e.preventDefault();
+      keyboardMode = true;
+      const next = getAdjacentInDirection(boardFocus, e.key);
+      if (next === null) return;
+      boardFocus = next;
+      const el = document.querySelector(`.board-node[data-node="${boardFocus}"]`);
+      if (el) el.focus();
+    });
+  }
 }
 
 function isComputerTurn(state) {
@@ -1139,6 +1194,11 @@ function finalizeAfterAction() {
   render();
   applyPostRenderAnimations();
   updateStatusBar();
+
+  if (keyboardMode && !gameState.gameOver && !isComputerTurn(gameState)) {
+    const el = document.querySelector(`.board-node[data-node="${boardFocus}"]`);
+    if (el) el.focus();
+  }
 
   if (gameState.gameOver) {
     setTimeout(() => {
