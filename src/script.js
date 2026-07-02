@@ -472,11 +472,11 @@ const LINES = [
 ];
 
 const ICONS = {
-  question: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M64 160c0-53 43-96 96-96s96 43 96 96c0 42.7-27.9 78.9-66.5 91.4-28.4 9.2-61.5 35.3-61.5 76.6l0 24c0 17.7 14.3 32 32 32s32-14.3 32-32l0-24c0-1.7 .6-4.1 3.5-7.3 3-3.3 7.9-6.5 13.7-8.4 64.3-20.7 110.8-81 110.8-152.3 0-88.4-71.6-160-160-160S0 71.6 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm96 352c22.1 0 40-17.9 40-40s-17.9-40-40-40-40 17.9-40 40 17.9 40 40 40z"/></svg>`,
-  x: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`,
-  heart: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M241 87.1l15 20.7 15-20.7C296 52.5 336.2 32 378.9 32 452.4 32 512 91.6 512 165.1l0 2.6c0 112.2-139.9 242.5-212.9 298.2-12.4 9.4-27.6 14.1-43.1 14.1s-30.8-4.6-43.1-14.1C139.9 410.2 0 279.9 0 167.7l0-2.6C0 91.6 59.6 32 133.1 32 175.8 32 216 52.5 241 87.1z"/></svg>`,
-  sun: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M288-32c8.4 0 16.3 4.4 20.6 11.7L364.1 72.3 468.9 46c8.2-2 16.9 .4 22.8 6.3S500 67 498 75.1l-26.3 104.7 92.7 55.5c7.2 4.3 11.7 12.2 11.7 20.6s-4.4 16.3-11.7 20.6L471.7 332.1 498 436.8c2 8.2-.4 16.9-6.3 22.8S477 468 468.9 466l-104.7-26.3-55.5 92.7c-4.3 7.2-12.2 11.7-20.6 11.7s-16.3-4.4-20.6-11.7L211.9 439.7 107.2 466c-8.2 2-16.8-.4-22.8-6.3S76 445 78 436.8l26.2-104.7-92.6-55.5C4.4 272.2 0 264.4 0 256s4.4-16.3 11.7-20.6L104.3 179.9 78 75.1c-2-8.2 .3-16.8 6.3-22.8S99 44 107.2 46l104.7 26.2 55.5-92.6 1.8-2.6c4.5-5.7 11.4-9.1 18.8-9.1zm0 144a144 144 0 1 0 0 288 144 144 0 1 0 0-288zm0 240a96 96 0 1 1 0-192 96 96 0 1 1 0 192z"/></svg>`,
-  moon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/></svg>`,
+  question: `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M64 160c0-53 43-96 96-96s96 43 96 96c0 42.7-27.9 78.9-66.5 91.4-28.4 9.2-61.5 35.3-61.5 76.6l0 24c0 17.7 14.3 32 32 32s32-14.3 32-32l0-24c0-1.7 .6-4.1 3.5-7.3 3-3.3 7.9-6.5 13.7-8.4 64.3-20.7 110.8-81 110.8-152.3 0-88.4-71.6-160-160-160S0 71.6 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32zm96 352c22.1 0 40-17.9 40-40s-17.9-40-40-40-40 17.9-40 40 17.9 40 40 40z"/></svg>`,
+  x: `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`,
+  heart: `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M241 87.1l15 20.7 15-20.7C296 52.5 336.2 32 378.9 32 452.4 32 512 91.6 512 165.1l0 2.6c0 112.2-139.9 242.5-212.9 298.2-12.4 9.4-27.6 14.1-43.1 14.1s-30.8-4.6-43.1-14.1C139.9 410.2 0 279.9 0 167.7l0-2.6C0 91.6 59.6 32 133.1 32 175.8 32 216 52.5 241 87.1z"/></svg>`,
+  sun: `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M288-32c8.4 0 16.3 4.4 20.6 11.7L364.1 72.3 468.9 46c8.2-2 16.9 .4 22.8 6.3S500 67 498 75.1l-26.3 104.7 92.7 55.5c7.2 4.3 11.7 12.2 11.7 20.6s-4.4 16.3-11.7 20.6L471.7 332.1 498 436.8c2 8.2-.4 16.9-6.3 22.8S477 468 468.9 466l-104.7-26.3-55.5 92.7c-4.3 7.2-12.2 11.7-20.6 11.7s-16.3-4.4-20.6-11.7L211.9 439.7 107.2 466c-8.2 2-16.8-.4-22.8-6.3S76 445 78 436.8l26.2-104.7-92.6-55.5C4.4 272.2 0 264.4 0 256s4.4-16.3 11.7-20.6L104.3 179.9 78 75.1c-2-8.2 .3-16.8 6.3-22.8S99 44 107.2 46l104.7 26.2 55.5-92.6 1.8-2.6c4.5-5.7 11.4-9.1 18.8-9.1zm0 144a144 144 0 1 0 0 288 144 144 0 1 0 0-288zm0 240a96 96 0 1 1 0-192 96 96 0 1 1 0 192z"/></svg>`,
+  moon: `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/></svg>`,
 };
 
 let gameState = null;
@@ -556,11 +556,11 @@ function renderHeader(showClose = false, centerContent = '') {
     <div class="header-left">
       ${showClose ? `<button class="icon-btn" id="btn-close" aria-label="Close game">${ICONS.x}</button>` : '<div class="icon-btn-placeholder"></div>'}
     </div>
-    ${centerContent ? `<div class="header-center">${centerContent}</div>` : ''}
+    ${centerContent ? `<div class="header-center" aria-hidden="true">${centerContent}</div>` : ''}
     <div class="header-right">
       <button class="icon-btn" id="btn-help" aria-label="Help">${ICONS.question}</button>
       <button class="icon-btn" id="btn-theme" aria-label="${themeLabel}" aria-pressed="${theme === 'light'}">${ICONS[themeIcon]}</button>
-      <a href="https://www.freecodecamp.org/donate" target="_blank" rel="noopener" class="icon-btn" aria-label="Donate">${ICONS.heart}</a>
+      <a href="https://www.freecodecamp.org/donate" target="_blank" rel="noopener" class="icon-btn" aria-label="Donate (opens in new tab)">${ICONS.heart}</a>
     </div>
   </header>`;
 }
@@ -577,15 +577,15 @@ function renderHomeScreen() {
       <p class="game-subtitle">A classic strategy game for two</p>
       <div class="setup-group">
         <div class="pill-group" id="mode-group">
-          <button class="pill ${prefs.mode === 'pvc' ? 'active' : ''}" data-value="pvc">vs Computer</button>
-          <button class="pill ${prefs.mode === 'pvp' ? 'active' : ''}" data-value="pvp">2 Player</button>
+          <button class="pill ${prefs.mode === 'pvc' ? 'active' : ''}" data-value="pvc" aria-pressed="${prefs.mode === 'pvc'}">vs Computer</button>
+          <button class="pill ${prefs.mode === 'pvp' ? 'active' : ''}" data-value="pvp" aria-pressed="${prefs.mode === 'pvp'}">2 Player</button>
         </div>
       </div>
       <div id="records-wrap" style="width:100%;${prefs.mode !== 'pvc' ? 'display:none' : ''}">${renderRecords()}</div>
       <div class="setup-group pvc-only" id="color-group-wrap" style="${prefs.mode !== 'pvc' ? 'display:none' : ''}">
         <div class="pill-group pill-group--sm" id="color-group">
-          <button class="pill ${prefs.playerColor === 'black' ? 'active' : ''}" data-value="black">Go First</button>
-          <button class="pill ${prefs.playerColor === 'white' ? 'active' : ''}" data-value="white">Go Second</button>
+          <button class="pill ${prefs.playerColor === 'black' ? 'active' : ''}" data-value="black" aria-pressed="${prefs.playerColor === 'black'}">Go First</button>
+          <button class="pill ${prefs.playerColor === 'white' ? 'active' : ''}" data-value="white" aria-pressed="${prefs.playerColor === 'white'}">Go Second</button>
         </div>
       </div>
       <div class="home-actions">
@@ -705,29 +705,28 @@ function getStatusText(state) {
   if (state.gameOver) {
     const w = state.gameOver.winner;
     if (w === 'draw') return { text: 'Draw by repetition', cls: 'status-neutral' };
-    const playerColor = state.playerColor;
     if (state.mode === 'pvc') {
-      if (w === playerColor) return { text: 'You win!', cls: 'status-win' };
+      if (w === state.playerColor) return { text: 'You win!', cls: 'status-win' };
       return { text: 'Computer wins', cls: 'status-lose' };
     }
-    const name = w === 'black' ? 'Blue' : 'Gold';
+    const name = w === 'black' ? 'Player 1' : 'Player 2';
     return { text: `${name} wins!`, cls: 'status-win' };
   }
 
-  if (isThinking) return { text: 'Computer is thinking...', cls: 'status-neutral' };
+  if (isThinking) return { text: 'Thinking...', cls: 'status-neutral' };
 
   const cp = state.currentPlayer;
-  const cpName = state.mode === 'pvc'
-    ? (cp === state.playerColor ? 'Your' : "Computer's")
-    : (cp === 'black' ? "Player 1's" : "Player 2's");
 
-  if (state.mustRemove) {
-    return { text: `${cpName} turn: Remove an opponent piece`, cls: 'status-neutral' };
+  if (state.mode === 'pvc') {
+    if (state.mustRemove) return { text: 'Remove an opponent piece', cls: 'status-neutral' };
+    if (state.phase === 'placement') return { text: 'Place a piece', cls: 'status-neutral' };
+    return { text: 'Move a piece', cls: 'status-neutral' };
   }
-  if (state.phase === 'placement') {
-    return { text: `${cpName} turn: Place a piece`, cls: 'status-neutral' };
-  }
-  return { text: `${cpName} turn: Move a piece`, cls: 'status-neutral' };
+
+  const pName = cp === 'black' ? 'Player 1' : 'Player 2';
+  if (state.mustRemove) return { text: `${pName}: Remove an opponent piece`, cls: 'status-neutral' };
+  if (state.phase === 'placement') return { text: `${pName}: Place a piece`, cls: 'status-neutral' };
+  return { text: `${pName}: Move a piece`, cls: 'status-neutral' };
 }
 
 function renderPiecesInHand(state) {
@@ -743,16 +742,19 @@ function renderPiecesInHand(state) {
   const wDots = Array(total).fill(0).map((_, i) =>
     `<span class="hand-dot ${i < wActive ? 'gold' : 'played'}"></span>`
   ).join('');
-  return `<div class="pieces-in-hand" aria-label="Pieces remaining to place">
-    <div class="hand-row"><div class="hand-dots">${bDots}</div></div>
-    <div class="hand-row"><div class="hand-dots">${wDots}</div></div>
+  const label = bothDone
+    ? `Blue: ${bActive} on board, Gold: ${wActive} on board`
+    : `Blue: ${bActive} of ${total} to place, Gold: ${wActive} of ${total} to place`;
+  return `<div class="pieces-in-hand" aria-label="${label}">
+    <div class="hand-row" aria-hidden="true"><div class="hand-dots">${bDots}</div></div>
+    <div class="hand-row" aria-hidden="true"><div class="hand-dots">${wDots}</div></div>
   </div>`;
 }
 
 function renderPlayScreen(state) {
   const status = getStatusText(state);
   return `<div class="screen play-screen">
-    ${renderHeader(true, `<span class="status-text ${status.cls}" id="status-text" aria-live="polite">${status.text}</span>`)}
+    ${renderHeader(true, `<span class="status-text ${status.cls}" id="status-text">${status.text}</span>`)}
     <hr class="header-rule" />
     <div class="play-content">
       ${renderPiecesInHand(state)}
@@ -772,14 +774,14 @@ function renderGameOverOverlay(state) {
     resultCls = 'status-neutral';
   } else if (state.mode === 'pvc') {
     if (w === state.playerColor) {
-      resultText = 'You Win!';
+      resultText = 'You win!';
       resultCls = 'status-win';
     } else {
-      resultText = 'Computer Wins';
+      resultText = 'Computer wins';
       resultCls = 'status-lose';
     }
   } else {
-    resultText = `${w === 'black' ? 'Blue' : 'Gold'} Wins!`;
+    resultText = `${w === 'black' ? 'Player 1' : 'Player 2'} wins!`;
     resultCls = 'status-win';
   }
   const rec = getRecords();
@@ -872,32 +874,39 @@ function render() {
 }
 
 function showHelp() {
+  const trigger = document.activeElement;
   document.body.insertAdjacentHTML('beforeend', renderHelpModal());
   const modal = document.getElementById('help-modal');
-  trapFocus(modal);
-  document.getElementById('btn-help-close').addEventListener('click', closeHelp);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeHelp(); });
-}
 
-function closeHelp() {
-  const modal = document.getElementById('help-modal');
-  if (modal) modal.remove();
+  function close() {
+    modal.remove();
+    if (trigger) trigger.focus();
+  }
+
+  trapFocus(modal);
+  document.getElementById('btn-help-close').addEventListener('click', close);
+  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+  modal.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 }
 
 function showConfirm(onConfirm) {
+  const trigger = document.activeElement;
   document.body.insertAdjacentHTML('beforeend', renderConfirmModal());
   const modal = document.getElementById('confirm-modal');
+
+  function close() {
+    modal.remove();
+    if (trigger) trigger.focus();
+  }
+
   trapFocus(modal);
   document.getElementById('btn-confirm-yes').addEventListener('click', () => {
     modal.remove();
     onConfirm();
   });
-  document.getElementById('btn-confirm-no').addEventListener('click', () => {
-    modal.remove();
-  });
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.remove();
-  });
+  document.getElementById('btn-confirm-no').addEventListener('click', close);
+  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+  modal.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 }
 
 function trapFocus(modal) {
@@ -945,7 +954,10 @@ function bindHomeEvents() {
     const pill = e.target.closest('.pill');
     if (!pill) return;
     mode = pill.dataset.value;
-    document.querySelectorAll('#mode-group .pill').forEach(p => p.classList.toggle('active', p === pill));
+    document.querySelectorAll('#mode-group .pill').forEach(p => {
+      p.classList.toggle('active', p === pill);
+      p.setAttribute('aria-pressed', p === pill);
+    });
     updatePvcVisibility();
   });
 
@@ -953,7 +965,10 @@ function bindHomeEvents() {
     const pill = e.target.closest('.pill');
     if (!pill) return;
     playerColor = pill.dataset.value;
-    document.querySelectorAll('#color-group .pill').forEach(p => p.classList.toggle('active', p === pill));
+    document.querySelectorAll('#color-group .pill').forEach(p => {
+      p.classList.toggle('active', p === pill);
+      p.setAttribute('aria-pressed', p === pill);
+    });
   });
 
   document.getElementById('btn-new-game').addEventListener('click', () => {
@@ -1107,10 +1122,7 @@ function renderBoardOnly() {
 function applyRemovalAnimation(nodeIndex) {
   const el = document.querySelector(`.board-node[data-node="${nodeIndex}"] .piece`);
   if (!el) return;
-  el.style.animationName = 'piece-disappear';
-  el.style.animationDuration = '200ms';
-  el.style.animationFillMode = 'forwards';
-  el.style.animationTimingFunction = 'ease';
+  el.classList.add('piece--disappear');
 }
 
 function finalizeAfterAction() {
@@ -1125,12 +1137,19 @@ function finalizeAfterAction() {
 
   render();
   applyPostRenderAnimations();
+  updateStatusBar();
+
+  if (gameState.gameOver) {
+    setTimeout(() => {
+      const btn = document.getElementById('btn-play-again');
+      if (btn) btn.focus();
+    }, 350);
+  }
 
   animLastPlaced = null;
   animLastRemoved = null;
   animLastFrom = null;
   animLastTo = null;
-
 
   if (!gameState.gameOver && isComputerTurn(gameState)) {
     scheduleAiIfNeeded();
@@ -1138,16 +1157,14 @@ function finalizeAfterAction() {
 }
 
 function applyPostRenderAnimations() {
-  // Placement: scale in new piece
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   if (animLastPlaced !== null) {
     const el = document.querySelector(`.board-node[data-node="${animLastPlaced}"] .piece`);
-    if (el) {
-      el.style.animation = 'piece-appear 200ms ease forwards';
-    }
+    if (el) el.classList.add('piece--appear');
   }
 
-  // Slide: translate from source position
-  if (animLastFrom !== null && animLastTo !== null) {
+  if (!reduceMotion && animLastFrom !== null && animLastTo !== null) {
     const el = document.querySelector(`.board-node[data-node="${animLastTo}"] .piece`);
     if (el) {
       const [fx, fy] = NODE_POS[animLastFrom];
@@ -1157,20 +1174,21 @@ function applyPostRenderAnimations() {
       el.style.animation = 'none';
       el.style.transform = `translate(${dx}px, ${dy}px)`;
       el.style.transition = 'transform 200ms ease';
-      // Force reflow then animate to final position
       void el.getBoundingClientRect();
       el.style.transform = 'translate(0, 0)';
     }
   }
-
 }
 
 function updateStatusBar() {
   const el = document.getElementById('status-text');
-  if (!el) return;
+  const live = document.getElementById('status-live');
   const status = getStatusText(gameState);
-  el.textContent = status.text;
-  el.className = `status-text ${status.cls}`;
+  if (el) {
+    el.textContent = status.text;
+    el.className = `status-text ${status.cls}`;
+  }
+  if (live) live.textContent = status.text;
 }
 
 function shakeStatusBar() {

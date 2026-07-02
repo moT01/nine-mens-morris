@@ -117,8 +117,8 @@ body {
 }
 
 .icon-btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--blue-mid);
+  outline: 2px solid var(--blue-mid);
+  outline-offset: 2px;
 }
 
 /* ── Home screen ── */
@@ -327,8 +327,8 @@ body {
 
 .btn-primary:focus-visible,
 .btn-secondary:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--blue-mid);
+  outline: 2px solid var(--blue-mid);
+  outline-offset: 2px;
 }
 
 /* ── Play screen ── */
@@ -540,6 +540,14 @@ body {
   to { transform: scale(0); opacity: 0; }
 }
 
+.piece--appear {
+  animation: piece-appear 200ms ease forwards;
+}
+
+.piece--disappear {
+  animation: piece-disappear 200ms ease forwards;
+}
+
 
 @keyframes dash-spin {
   to { stroke-dashoffset: -40; }
@@ -698,6 +706,23 @@ body {
 .modal-footer .btn-primary,
 .modal-footer .btn-secondary {
   width: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piece-removable-ring,
+  .node-ring-target,
+  .valid-dot,
+  .game-over-overlay,
+  .game-over-panel,
+  .game-over-result,
+  .modal-backdrop,
+  .modal-panel,
+  .status-text.shake,
+  .piece--appear,
+  .piece--disappear {
+    animation: none;
+    transition: none;
+  }
 }
 
 /* ── Responsive ── */
